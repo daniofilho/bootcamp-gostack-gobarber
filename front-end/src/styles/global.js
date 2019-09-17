@@ -1,5 +1,8 @@
 import { createGlobalStyle } from 'styled-components';
 
+import 'react-toastify/dist/ReactToastify.css';
+import 'react-perfect-scrollbar/dist/css/styles.css';
+
 export default createGlobalStyle`
 
   @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
@@ -11,8 +14,8 @@ export default createGlobalStyle`
     box-sizing: border-box;
   }
 
-  *:focus {
-    outline: 0;
+  *:focus{
+    outline: 0 !important;
   }
 
   html, body, #root {
