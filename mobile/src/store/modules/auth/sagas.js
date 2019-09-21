@@ -18,7 +18,10 @@ export function* signIn({ payload }) {
     const { token, user } = response.data;
 
     if (user.provider) {
-      Alert('Erro no login', 'O Usuário não pode ser prestador de serviço');
+      Alert.alert(
+        'Erro no login',
+        'O Usuário não pode ser prestador de serviço'
+      );
       return;
     }
 
@@ -29,7 +32,7 @@ export function* signIn({ payload }) {
 
     //history.push('/dashboard');
   } catch (err) {
-    Alert('Falha na autenticação', 'verifique seus dados');
+    Alert.alert('Falha na autenticação', 'verifique seus dados');
     yield put(signFailure());
   }
 }
@@ -46,7 +49,7 @@ export function* signUp({ payload }) {
 
     //history.push('/');
   } catch (err) {
-    Alert('Falha no cadastro', 'verifique seus dados');
+    Alert.alert('Falha no cadastro', 'verifique seus dados');
     yield put(signFailure());
   }
 }
@@ -61,13 +64,8 @@ export function setToken({ payload }) {
   }
 }
 
-export function signOut() {
-  //history.push('/');
-}
-
 export default all([
   takeLatest('@auth/SIGN_IN_REQUEST', signIn),
   takeLatest('@auth/SIGN_UP_REQUEST', signUp),
-  takeLatest('@auth/SIGN_OUT', signOut),
   takeLatest('persist/REHYDRATE', setToken), // action disparado pelo persist
 ]);
