@@ -11,13 +11,19 @@ import ScheduleController from './app/controllers/ScheduleController';
 import NotificationController from './app/controllers/NotificationController';
 import AvailableController from './app/controllers/AvailableController';
 
+// Validators
+import validateUserStore from './app/validators/UserStore';
+import validateUserUpdate from './app/validators/UserUpdate';
+import validateSessionStore from './app/validators/SessionStore';
+import validateAppointmentStore from './app/validators/AppointmentStore';
+
 import authMiddleware from './app/middlewares/auth';
 
 const routes = new Router();
 const upload = multer(multerConfig);
 
-routes.post('/users', UserController.store);
-routes.post('/sessions', SessionController.store);
+routes.post('/users', validateUserStore, UserController.store);
+routes.post('/sessions', validateSessionStore, SessionController.store);
 
 // rota para testar erros
 routes.get('/error', (req, res) => {
@@ -27,12 +33,16 @@ routes.get('/error', (req, res) => {
 // Cria um middleware que irá verificar o token antes de executar qualquer rota depois dessa linha
 routes.use(authMiddleware);
 
-routes.put('/users', UserController.update);
+routes.put('/users', validateUserUpdate, UserController.update);
 
 routes.get('/providers', ProviderController.index);
 routes.get('/providers/:providerId/available', AvailableController.index);
 
-routes.post('/appointments', AppointmentController.store);
+routes.post(
+  '/appointments',
+  validateAppointmentStore,
+  AppointmentController.store
+);
 routes.get('/appointments', AppointmentController.index);
 routes.delete('/appointments/:id', AppointmentController.delete);
 

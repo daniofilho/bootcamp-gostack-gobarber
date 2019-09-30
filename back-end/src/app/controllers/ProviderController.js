@@ -1,9 +1,17 @@
 import User from '../models/User';
 import File from '../models/File';
 
+import Cache from '../../lib/Cache';
+
 class ProviderController {
   async index(req, res) {
-    const provider = await User.findAll({
+    // Verifica cache antes
+    const cached = await Cache.get('providers');
+    if (cached) {
+      return res.json(cached);
+    }
+
+    const providers = await User.findAll({
       where: { provider: true },
       attributes: [
         // só retorna os campos desejados
@@ -21,7 +29,9 @@ class ProviderController {
       ],
     });
 
-    return res.json(provider);
+    await Cache.set('providers', providers);
+
+    return res.json(providers);
   }
 }
 
