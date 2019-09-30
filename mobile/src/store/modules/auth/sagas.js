@@ -48,6 +48,7 @@ export function* signUp({ payload }) {
     });
 
     //history.push('/');
+    Alert.alert('Cadastro realizado com sucesso!');
   } catch (err) {
     Alert.alert('Falha no cadastro', 'verifique seus dados');
     yield put(signFailure());
