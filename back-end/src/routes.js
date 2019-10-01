@@ -1,4 +1,9 @@
 import { Router } from 'express';
+
+// # Brute Force protection
+import Brute from 'express-brute';
+import BruteRedis from 'express-brute-redis';
+
 import multer from 'multer';
 import multerConfig from './config/multer';
 
@@ -22,8 +27,21 @@ import authMiddleware from './app/middlewares/auth';
 const routes = new Router();
 const upload = multer(multerConfig);
 
+// Verifica a quantidade de requisições que um usuário irá fazer naquela rota
+// e o bloqueia caso muitas tentativas sejam feitas
+const bruteStore = new BruteRedis({
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+});
+const BruteForce = new Brute(bruteStore);
+
 routes.post('/users', validateUserStore, UserController.store);
-routes.post('/sessions', validateSessionStore, SessionController.store);
+routes.post(
+  '/sessions',
+  BruteForce.prevent,
+  validateSessionStore,
+  SessionController.store
+);
 
 // rota para testar erros
 routes.get('/error', (req, res) => {
